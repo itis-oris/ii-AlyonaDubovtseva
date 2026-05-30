@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог — Subscribio</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+    <a sec:authorize="hasRole('USER')" th:href="@{/cart}">Корзина</a>
+    <a sec:authorize="hasRole('USER')" th:href="@{/profile}">Профиль</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/products}">Товары</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/orders}">Заказы</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/auth/login}">Войти</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/auth/register}">Регистрация</a>
+    <form sec:authorize="isAuthenticated()" method="post" th:action="@{/auth/logout}">
+        <button type="submit" class="btn-secondary btn">Выйти</button>
+    </form>
+</header>
+<div class="card about-block">
+    <h2>Что такое Subscribio?</h2>
+    <p>
+        Subscribio — сервис покупки цифровых подарочных карт
+        и кодов активации популярных зарубежных подписок.
+    </p>
+    <p>
+        После оплаты заказа вы получите код активации
+        на электронную почту, указанную в профиле.
+    </p>
+    <p>
+        Доступны Spotify, Apple Music, ChatGPT Plus,
+        Netflix, YouTube Premium и другие сервисы.
+    </p>
+    <p class="muted">
+        Среднее время обработки заказа — до 24 часов.
+    </p>
+</div>
+<div class="container">
+    <h1>Каталог подписок</h1>
+    <div class="grid">
+        <aside class="card">
+            <h3>Фильтры</h3>
+            <form method="get" th:action="@{/catalog}">
+                <div class="form-group">
+                    <label>Поиск</label>
+                    <input type="text" name="query" th:value="${query}">
+                </div>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select name="categoryId">
+                        <option value="">Все категории</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}"
+                                th:selected="${selectedCategoryId != null and selectedCategoryId == category.id}"
+                                th:text="${category.name}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Цена от</label>
+                    <input type="number" name="minPrice" th:value="${minPrice}">
+                </div>
+                <div class="form-group">
+                    <label>Цена до</label>
+                    <input type="number" name="maxPrice" th:value="${maxPrice}">
+                </div>
+                <button type="submit" class="btn">Применить</button>
+            </form>
+        </aside>
+
+        <main>
+            <div class="products">
+                <div class="card" th:if="${products.isEmpty()}">
+                    <h3>Товары не найдены</h3>
+                    <p class="muted">Попробуйте изменить фильтры или поисковый запрос.</p>
+                </div>
+                <div class="card product-card" th:each="product : ${products}">
+                    <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" alt="">
+                    <h3><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.title}"></a></h3>
+                    <p class="muted" th:text="${product.durationLabel}"></p>
+                    <p class="price"><span th:text="${product.priceRub}"></span> ₽</p>
+
+                    <a class="btn-secondary btn" th:href="@{/products/{id}(id=${product.id})}">Подробнее</a>
+                    <button sec:authorize="isAuthenticated()"
+                            type="button"
+                            th:onclick="'addToCart(' + ${product.id} + ')'">
+                        В корзину
+                    </button>
+
+                    <a sec:authorize="!isAuthenticated()"
+                       class="btn"
+                       th:href="@{/auth/login}">
+                        Войти, чтобы купить
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="/js/cart.js"></script>
+</body>
+</html>

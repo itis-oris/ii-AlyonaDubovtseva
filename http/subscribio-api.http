@@ -1,0 +1,35 @@
+### Главная страница
+GET http://localhost:8080/
+
+### Каталог
+GET http://localhost:8080/catalog
+
+### список товаров
+GET http://localhost:8080/api/products
+
+### один товар
+GET http://localhost:8080/api/products/1
+
+### Swagger
+GET http://localhost:8080/v3/api-docs
+
+### Пересчёт валюты
+GET http://localhost:8080/api/currency/convert?currency=USD
+
+### Корзина текущего пользователя
+GET http://localhost:8080/api/cart
+
+### Payment service - успешная оплата
+POST http://localhost:8081/api/payments
+Content-Type: application/json
+
+{
+  "amount": 1200.00,
+  "currency": "RUB",
+  "cardNumber": "1111222233334444",
+  "expiryDate": "12/30",
+  "cvv": "123"
+}
+
+### Пересчёт корзины в USD
+GET http://localhost:8080/api/currency/convert?currency=USD

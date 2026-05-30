@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ — Subscribio Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <a class="logo" th:href="@{/admin/products}">Subscribio Admin</a>
+    <a th:href="@{/admin/products}">Товары</a>
+    <a th:href="@{/admin/orders}">Заказы</a>
+    <a th:href="@{/catalog}">Каталог</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h1>Заказ <span th:text="${order.orderNumber}"></span></h1>
+        <div class="success" th:if="${success}" th:text="${success}"></div>
+        <div class="error" th:if="${error}" th:text="${error}"></div>
+        <p>
+            Пользователь:
+            <strong th:text="${order.user.fullName}"></strong>
+        </p>
+        <p>
+            Email:
+            <strong th:text="${order.user.email}"></strong>
+        </p>
+        <p>
+            Дата:
+            <strong th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></strong>
+        </p>
+        <p>
+            Статус:
+            <strong th:text="${@orderStatusText.convert(order.status)}"></strong>
+        </p>
+        <p>
+            Сумма:
+            <strong th:text="${order.totalInSelectedCurrency}"></strong>
+            <strong th:text="${order.currency}"></strong>
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Купленные подписки</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Подписка</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.productTitle}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td>
+                    <span th:text="${item.priceRub}"></span> ₽
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card" th:if="${order.status.name() != 'KEY_SENT' and order.status.name() != 'CANCELLED'}">
+        <h2>Отправить ключи пользователю</h2>
+        <p class="muted">
+            Введите ключи для всех купленных подписок. Лучше писать название подписки и ключи под ней.
+        </p>
+        <form method="post"
+              th:action="@{/admin/orders/{id}/send-keys(id=${order.id})}">
+            <textarea name="activationKeys"
+                      required
+                      placeholder="Apple Music:
+APPLE-KEY-111
+
+Spotify Premium:
+SPOTIFY-KEY-111
+SPOTIFY-KEY-222"></textarea>
+            <button type="submit" class="btn">
+                Отправить ключи на почту
+            </button>
+        </form>
+    </div>
+
+    <div class="card" th:if="${order.status.name() == 'KEY_SENT'}">
+        <h2>Ключи уже отправлены</h2>
+        <p>
+            Дата отправки:
+            <span th:text="${#temporals.format(order.keySentAt, 'dd.MM.yyyy HH:mm')}"></span>
+        </p>
+        <pre th:text="${order.activationKeys}"></pre>
+    </div>
+    <div class="card" th:if="${order.status.name() != 'KEY_SENT' and order.status.name() != 'CANCELLED'}">
+        <h2>Отмена заказа</h2>
+        <form method="post"
+              th:action="@{/admin/orders/{id}/cancel(id=${order.id})}">
+            <button type="submit" class="btn btn-danger">
+                Отменить заказ
+            </button>
+        </form>
+    </div>
+
+    <a class="btn btn-secondary" th:href="@{/admin/orders}">
+        Назад к заказам
+    </a>
+</div>
+
+</body>
+</html>

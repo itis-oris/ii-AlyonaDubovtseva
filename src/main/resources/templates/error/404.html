@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница не найдена — Subscribio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h1>Страница не найдена</h1>
+        <p>
+            Такой страницы не существует или она была удалена.
+        </p>
+        <a class="btn" th:href="@{/catalog}">
+            Вернуться в каталог
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

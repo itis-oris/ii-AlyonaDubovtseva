@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${productId == null ? 'Добавить подписку' : 'Редактировать подписку'}">Форма товара</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <a class="logo" th:href="@{/admin/products}">Subscribio Admin</a>
+    <a th:href="@{/admin/products}">Товары</a>
+    <a th:href="@{/admin/orders}">Заказы пользователей</a>
+    <a th:href="@{/catalog}">Каталог</a>
+</header>
+
+<div class="container">
+    <div class="card form-block">
+        <h1 th:text="${productId == null ? 'Добавить подписку' : 'Редактировать подписку'}"></h1>
+        <form method="post"
+              th:action="${productId == null} ? @{/admin/products} : @{/admin/products/{id}(id=${productId})}"
+              th:object="${productForm}">
+            <div class="form-group">
+                <label>Название</label>
+                <input type="text" th:field="*{title}">
+                <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea th:field="*{description}"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+            <div class="form-group">
+                <label>Цена в рублях</label>
+                <input type="number" step="0.01" th:field="*{priceRub}">
+                <div class="error" th:if="${#fields.hasErrors('priceRub')}" th:errors="*{priceRub}"></div>
+            </div>
+            <div class="form-group">
+                <label>Картинка URL</label>
+                <input type="text" th:field="*{imageUrl}">
+            </div>
+            <div class="form-group">
+                <label>Срок подписки</label>
+                <input type="text" th:field="*{durationLabel}">
+                <div class="error" th:if="${#fields.hasErrors('durationLabel')}" th:errors="*{durationLabel}"></div>
+            </div>
+            <div class="form-group">
+                <label>Категория</label>
+                <select th:field="*{categoryId}">
+                    <option value="">Выберите категорию</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+            </div>
+            <div class="form-group checkbox-row">
+                <label>
+                    <input type="checkbox" th:field="*{active}">
+                    Активен
+                </label>
+            </div>
+            <button type="submit" class="btn">Сохранить</button>
+            <a class="btn btn-secondary" th:href="@{/admin/products}">Назад</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

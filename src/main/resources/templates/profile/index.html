@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль — Subscribio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+    <a th:href="@{/cart}">Корзина</a>
+</header>
+
+<div class="container">
+    <h1>Профиль</h1>
+    <p>Имя: <span th:text="${user.fullName}"></span></p>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Поддержка: <a href="https://t.me/kxqws">Telegram</a></p>
+    <div class="card">
+        <h2>Как получить подписку?</h2>
+        <ol>
+            <li>Добавьте подписки в корзину.</li>
+            <li>Оплатите заказ.</li>
+            <li>Дождитесь обработки заказа администратором.</li>
+            <li>Код активации придёт на email из профиля.</li>
+        </ol>
+        <p>
+            Если письмо не пришло в течение 24 часов,
+            обратитесь в поддержку.
+        </p>
+    </div>
+    <h2>История покупок</h2>
+    <div th:if="${orders.isEmpty()}" class="card">Заказов пока нет.</div>
+    <table th:if="${!orders.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Номер заказа</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderNumber}"></td>
+            <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${@orderStatusText.convert(order.status)}"></td>
+            <td>
+                <span th:text="${order.totalInSelectedCurrency}"></span>
+                <span th:text="${order.currency}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Частые вопросы</h2>
+    <div class="card">
+
+        <h4>Куда придёт код?</h4>
+        <p>На email, указанный при регистрации.</p>
+        <h4>Сколько ждать?</h4>
+        <p>Обычно до 24 часов после оплаты.</p>
+        <h4>Можно ли вернуть деньги?</h4>
+        <p>После отправки цифрового ключа возврат невозможен.</p>
+        <h4>Как связаться с поддержкой?</h4>
+        <p>Через Telegram.</p>
+    </div>
+</div>
+</body>
+</html>

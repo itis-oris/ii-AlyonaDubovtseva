@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.title}">Подписка</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+    <a th:href="@{/cart}">Корзина</a>
+</header>
+
+<div class="container">
+    <div class="card product-card">
+        <h1 th:text="${product.title}"></h1>
+        <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" width="220" alt="">
+        <p th:text="${product.description}"></p>
+        <p>Срок: <span th:text="${product.durationLabel}"></span></p>
+        <p>Цена: <span th:text="${product.priceRub}"></span> ₽</p>
+        <button sec:authorize="hasRole('USER')"
+                type="button"
+                th:onclick="'addToCart(' + ${product.id} + ')'">
+            В корзину
+        </button>
+        <a sec:authorize="!isAuthenticated()"
+           class="btn"
+           th:href="@{/auth/login}">
+            Войти, чтобы купить
+        </a>
+        <a class="btn-secondary btn" th:href="@{/catalog}">Назад в каталог</a>
+    </div>
+</div>
+
+<script src="/js/cart.js"></script>
+</body>
+</html>

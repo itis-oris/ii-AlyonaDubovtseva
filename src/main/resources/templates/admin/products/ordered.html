@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Купленные подписки — Subscribio Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <a class="logo" th:href="@{/admin/products}">Subscribio Admin</a>
+    <a th:href="@{/admin/products}">Товары</a>
+    <a th:href="@{/admin/orders}">Заказы</a>
+    <a th:href="@{/catalog}">Каталог</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h1>Подписки, которые уже покупали</h1>
+        <p class="muted">
+            Только те подписки, которые встречаются в позициях заказов.
+        </p>
+        <div th:if="${products.isEmpty()}">
+            Пока ни одну подписку не покупали.
+        </div>
+        <table th:if="${!products.isEmpty()}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Цена</th>
+                <th>Активен</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.title}"></td>
+                <td th:text="${product.category != null ? product.category.name : '-'}"></td>
+                <td>
+                    <span th:text="${product.priceRub}"></span> ₽
+                </td>
+                <td th:text="${product.active ? 'Да' : 'Нет'}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-secondary" th:href="@{/admin/products}">
+            Назад к товарам
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

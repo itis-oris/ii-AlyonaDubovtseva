@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оплата — Subscribio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+    <a th:href="@{/cart}">Корзина</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h1>Оформление заказа</h1>
+        <div th:if="${checkoutError}" class="error" th:text="${checkoutError}"></div>
+        <h2>Ваш заказ</h2>
+        <div th:if="${cart.items.isEmpty()}">
+            Корзина пустая. <a th:href="@{/catalog}">Вернуться в каталог</a>
+        </div>
+        <div th:if="${!checkoutItems.isEmpty()}" th:each="item : ${checkoutItems}">
+            <p>
+                <span th:text="${item.title}"></span>,
+                количество: <span th:text="${item.quantity}"></span>,
+                цена: <span th:text="${item.price}"></span> <span th:text="${selectedCurrency}"></span>,
+                сумма: <span th:text="${item.subtotal}"></span> <span th:text="${selectedCurrency}"></span>
+            </p>
+        </div>
+        <h3>
+            Итого: <span th:text="${selectedAmount}"></span> <span th:text="${selectedCurrency}"></span>
+        </h3>
+        <form method="post" th:action="@{/checkout}" th:object="${paymentForm}" class="form-block">
+            <div class="form-group">
+                <label>Номер карты</label>
+                <input type="text" th:field="*{cardNumber}" placeholder="1111222233334444">
+                <div class="error" th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}"></div>
+            </div>
+            <div class="form-group">
+                <label>Срок действия</label>
+                <input type="text" th:field="*{expiryDate}" placeholder="12/30">
+                <div class="error" th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}"></div>
+            </div>
+            <div class="form-group">
+                <label>CVV</label>
+                <input type="text" th:field="*{cvv}" placeholder="123">
+                <div class="error" th:if="${#fields.hasErrors('cvv')}" th:errors="*{cvv}"></div>
+            </div>
+            <input type="hidden" th:field="*{currency}">
+            <button type="submit" class="btn">Оплатить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

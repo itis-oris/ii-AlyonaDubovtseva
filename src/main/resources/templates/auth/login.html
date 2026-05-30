@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход — Subscribio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-page">
+<div class="auth-card">
+    <h1>Вход</h1>
+    <div class="error" th:if="${param.error}">
+        Неверный email или пароль
+    </div>
+    <div class="success" th:if="${param.registered}">
+        Регистрация успешна. Теперь войдите.
+    </div>
+    <form method="post" th:action="@{/auth/login}" th:object="${loginForm}">
+        <div>
+            <label>Email</label>
+            <input type="email" name="email" th:field="*{email}">
+        </div>
+        <div>
+            <label>Пароль</label>
+            <input type="password" name="password" th:field="*{password}">
+        </div>
+        <button type="submit">Войти</button>
+    </form>
+    <p>
+        <a th:href="@{/auth/register}">Зарегистрироваться</a>
+    </p>
+</div>
+</body>
+</html>

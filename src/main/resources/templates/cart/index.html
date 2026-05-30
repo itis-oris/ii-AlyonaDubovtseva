@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина — Subscribio</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="header">
+    <a class="logo" th:href="@{/catalog}">Subscribio</a>
+    <a th:href="@{/catalog}">Каталог</a>
+    <a th:href="@{/profile}">Профиль</a>
+</header>
+
+<div class="container">
+    <h1>Корзина</h1>
+    <div id="cart-items">
+        <div th:if="${cart.items.isEmpty()}" class="card">
+            <p>Корзина пустая</p>
+        </div>
+        <div th:each="item : ${cart.items}" class="card cart-item">
+            <h3 th:text="${item.title}"></h3>
+            <p>Цена: <span th:text="${item.priceRub}"></span> ₽</p>
+            <p>Количество: <span th:text="${item.quantity}"></span></p>
+            <p>Сумма: <span th:text="${item.subtotalRub}"></span> ₽</p>
+            <div class="small-actions">
+                <button type="button" th:onclick="'decreaseCartItem(' + ${item.cartItemId} + ')'">-</button>
+                <button type="button" th:onclick="'increaseCartItem(' + ${item.cartItemId} + ')'">+</button>
+                <button type="button" th:onclick="'removeCartItem(' + ${item.cartItemId} + ')'">Удалить</button>
+            </div>
+        </div>
+    </div>
+    <h2>
+        Итого:
+        <span id="cart-total" th:text="${cart.totalRub}"></span>
+        <span id="cart-currency">RUB</span>
+    </h2>
+    <div class="card">
+        <h3>Пересчёт валюты</h3>
+        <select id="currency-select">
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="KZT">KZT</option>
+            <option value="TRY">TRY</option>
+        </select>
+        <button type="button" onclick="convertCurrency()">Пересчитать</button>
+        <p>Сумма в выбранной валюте: <span id="converted-total">—</span></p>
+    </div>
+    <a id="checkout-link" class="btn" th:href="@{/checkout(currency='RUB')}">
+        Перейти к оплате
+    </a>
+</div>
+<script src="/js/cart.js"></script>
+</body>
+</html>
